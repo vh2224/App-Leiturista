@@ -71,15 +71,24 @@ export default function UseCam({CloseModalPhoto, dataForm}) {
 
   async function renameFilePhoto(dataForm) {
 
-    console.log(dataForm);
+    const photo = (await MediaLibrary.createAssetAsync(captured)).uri;
+
+    console.log(photo)
+
+
+    const album = await MediaLibrary.getAlbumAsync('DCIM');
+
+    console.log(album);
 
     console.log(dataForm.matricula, dataForm.codigo, dataForm.situacao);
 
-    const asset = await StorageAccessFramework.createFileAsync(captured, `${dataForm.matricula}/${dataForm.codigo}/${dataForm.situacao}`, '.jpg');
+    try {
+      await FileSystem.copyAsync({from: photo, to: `file:///storage/emulated/0/FACULDADE/${dataForm.matricula}.jpg` });
+    }catch(e){
+      console.error(e);
+    }
+    
 
-    console.log(asset);
-
-    await MediaLibrary.saveToLibraryAsync(asset);
 
   }
 
